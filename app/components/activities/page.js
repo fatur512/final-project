@@ -1,20 +1,20 @@
+"use client";
+
 import { useEffect, useState } from "react";
-import axiosInstance from "@/app/utils/client"; // Ensure the axios instance is correct
+import axiosInstance from "@/app/utils/client";
 
 const Activities = () => {
-  const [activities, setActivities] = useState([]); // State for activities
-  const [loading, setLoading] = useState(true); // Loading state
-  const [error, setError] = useState(null); // Error state
+  const [activities, setActivities] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Fetch activities from API
   useEffect(() => {
     const fetchActivities = async () => {
       try {
         const response = await axiosInstance.get("/activities");
 
-        // Check if response is valid and contains the data
         if (Array.isArray(response.data) && response.data.length > 0) {
-          setActivities(response.data); // Store activities in state
+          setActivities(response.data);
         } else {
           setError("No activities available.");
         }
@@ -22,16 +22,14 @@ const Activities = () => {
         setError("Failed to fetch activities. Please try again.");
         console.log("Error fetching activities:", error);
       } finally {
-        setLoading(false); // Set loading to false after fetching
+        setLoading(false);
       }
     };
 
     fetchActivities();
-  }, []); // Runs only once when the component mounts
+  }, []);
 
-  // Handle activity card click to navigate to details page (no useRouter)
   const handleActivityClick = (activityId) => {
-    // Using window.location.href for navigation
     window.location.href = `/activity/${activityId}`;
   };
 
@@ -55,7 +53,7 @@ const Activities = () => {
           <div
             key={activity.id}
             className="overflow-hidden bg-white rounded-lg shadow-md cursor-pointer hover:shadow-lg"
-            onClick={() => handleActivityClick(activity.id)} // Handle click here
+            onClick={() => handleActivityClick(activity.id)}
           >
             <img
               src={activity.imageUrl || "/default-image.jpg"}
