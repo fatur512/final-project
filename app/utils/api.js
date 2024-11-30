@@ -1,7 +1,7 @@
-import axiosInstance from "./client";
+import axiosInstance, { API_KEY } from "./client";
 import Cookie from "js-cookie";
 
-const getAuthToken = () => {
+export const getAuthToken = () => {
   return Cookie.get("authToken");
 };
 
@@ -33,7 +33,7 @@ export const postCart = async (activityId) => {
 export const getCart = async () => {
   try {
     const token = getAuthToken();
-    const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+    const config = token ? { headers: { apiKey: API_KEY, ...(token && { Authorization: `Bearer ${token}` }) } } : {};
     const response = await axiosInstance.get("/carts", config);
     return response.data;
   } catch (error) {
