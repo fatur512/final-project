@@ -1,5 +1,6 @@
+"use client";
 import { useState, useEffect } from "react";
-import axiosInstance from "@/app/utils/client"; // Assuming your axiosInstance is in this path
+import axiosInstance from "@/app/utils/client";
 
 const Categories = () => {
   const [categories, setCategories] = useState([]);
@@ -10,10 +11,10 @@ const Categories = () => {
     const fetchCategories = async () => {
       try {
         const response = await axiosInstance.get("/categories");
-        setCategories(response.data.data); // Assuming response contains 'data' with categories
+        setCategories(response.data.data);
       } catch (err) {
         setError("Failed to load categories");
-        console.error("Error fetching categories:", err); // Log the error for debugging
+        console.error("Error fetching categories:", err);
       } finally {
         setLoading(false);
       }
@@ -22,11 +23,9 @@ const Categories = () => {
     fetchCategories();
   }, []);
 
-  // Function to handle errors during image load
   const handleImageError = (e) => {
-    // If there's an error, change the image to a fallback image, but only once
     e.target.src = "/fallback-image.jpg";
-    e.target.onerror = null; // Disable the error handler after fallback image is set
+    e.target.onerror = null;
   };
 
   if (loading) {
@@ -52,12 +51,11 @@ const Categories = () => {
               className="relative overflow-hidden transition-shadow duration-200 bg-white border border-gray-200 rounded-lg shadow-sm group hover:shadow-md"
             >
               <div className="h-40 bg-gray-200">
-                {/* Use image URL or fallback to a placeholder */}
                 <img
                   src={category.imageUrl}
                   alt={category.name}
                   className="object-cover w-full h-full"
-                  onError={handleImageError} // Attach error handler for fallback
+                  onError={handleImageError}
                 />
               </div>
               <div className="p-4">

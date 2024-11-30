@@ -1,56 +1,54 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { getTransactionDetails } from "../../utils/api"; // Ensure you have an API function for this
+import { getTransactionDetails } from "../../utils/api";
 
 const TransactionSuccess = () => {
   const router = useRouter();
-  const { id } = router.query; // Get the dynamic transaction ID from the URL
+  const { id } = router.query;
   const [transactionDetails, setTransactionDetails] = useState(null);
-  const [loading, setLoading] = useState(true); // Loading state to manage the UI
-  const [error, setError] = useState(null); // Error state for better error feedback
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Fetch transaction details using the transaction ID passed in the URL
   useEffect(() => {
     if (id) {
       const fetchTransactionData = async () => {
         try {
-          const data = await getTransactionDetails(id); // API call to fetch transaction details
+          const data = await getTransactionDetails(id);
           setTransactionDetails(data);
         } catch (error) {
           console.error("Error fetching transaction details:", error);
           setError("Failed to load transaction details. Please try again later.");
-          setTransactionDetails(null); // Handle error gracefully
+          setTransactionDetails(null);
         } finally {
-          setLoading(false); // Set loading state to false once data is fetched
+          setLoading(false);
         }
       };
 
       fetchTransactionData();
     }
-  }, [id]); // Re-run the effect if the ID changes
+  }, [id]);
 
   if (loading) {
-    return <div>Loading...</div>; // Show loading while data is being fetched
+    return <div>Loading...</div>;
   }
 
   if (error) {
-    return <div>{error}</div>; // Display error message if there's an issue
+    return <div>{error}</div>;
   }
 
   if (!transactionDetails) {
-    return <div>No transaction details found.</div>; // Error state if transaction details are not found
+    return <div>No transaction details found.</div>;
   }
 
   const formatCurrency = (amount) => {
-    if (amount == null) return "Rp 0"; // Default value in case amount is null or undefined
+    if (amount == null) return "Rp 0";
     return new Intl.NumberFormat("id-ID", {
       style: "currency",
       currency: "IDR",
-    }).format(amount / 100); // Assuming the amount is in cents
+    }).format(amount / 100);
   };
 
   const handlePrintInvoice = () => {
-    // Triggering the browser's print dialog for the current page (Invoice View)
     window.print();
   };
 
@@ -60,8 +58,7 @@ const TransactionSuccess = () => {
       <div className="space-y-4">
         <div>
           <div className="text-lg font-semibold">Transaction ID: {transactionDetails.id}</div>
-          <div className="text-sm text-gray-600">Date: {transactionDetails.date || "N/A"}</div>{" "}
-          {/* Fallback if no date */}
+          <div className="text-sm text-gray-600">Date: {transactionDetails.date || "N/A"}</div>
         </div>
         <div>
           <h2 className="font-semibold">Items</h2>

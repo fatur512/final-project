@@ -9,26 +9,26 @@ import Banner from "./components/banner/page";
 import Activities from "./components/activities/page";
 
 export default function Home() {
-  const [badgeCount, setBadgeCount] = useState(0); // Badge count for cart items
-  const [loadingCart, setLoadingCart] = useState(true); // Loading state for cart data
-  const [error, setError] = useState(null); // State for error handling
+  const [badgeCount, setBadgeCount] = useState(0);
+  const [loadingCart, setLoadingCart] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchCartDataLength = async () => {
       try {
         const cartData = await getCart();
-        setBadgeCount(cartData.data.length); // Update badge count with cart data length
+        setBadgeCount(cartData.data.length);
       } catch (error) {
         setError("Failed to fetch cart data. Please try again.");
-        setBadgeCount(0); // Reset badge count if there's an error
-        console.error("Error fetching cart data:", error); // Log the error for debugging
+        setBadgeCount(0);
+        console.log("Error fetching cart data:", error);
       } finally {
-        setLoadingCart(false); // Set loading to false once data is fetched
+        setLoadingCart(false);
       }
     };
 
     fetchCartDataLength();
-  }, []); // Only run once on component mount
+  }, []);
 
   if (loadingCart) {
     return (
@@ -52,7 +52,7 @@ export default function Home() {
       <Banner />
       <main>
         <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-          <Categories /> {/* Categories Section */}
+          <Categories />
           <Card setBadgeCount={setBadgeCount} />
         </div>
         <Activities />

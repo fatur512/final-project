@@ -1,10 +1,10 @@
 import { BellIcon } from "@heroicons/react/24/outline";
-import Link from "next/link"; // Import Link from next/link
+import Link from "next/link";
 
 export default function CartNotification({ badgeCount }) {
   return (
     <Link
-      href="/carts" // Navigate to /carts when clicked
+      href="/carts"
       passHref
       className="relative p-1 text-gray-400 bg-gray-800 rounded-full hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
     >

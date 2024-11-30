@@ -2,29 +2,25 @@
 
 import { useState } from "react";
 import Cookie from "js-cookie";
-import axiosInstance from "../utils/client"; // Import axiosInstance
+import axiosInstance from "../utils/client";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("user"); // Default role is user
+  const [role, setRole] = useState("user");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Function to handle login
   const handleLogin = async (e) => {
     e.preventDefault();
 
     setLoading(true);
     try {
-      // Send POST request to /login with email, password, and role
       const response = await axiosInstance.post("/login", { email, password, role });
 
-      // Assuming the response contains a token or authentication info
       if (response.data.token) {
-        // Set the token in cookies if login is successful
-        Cookie.set("authToken", response.data.token, { expires: 1 }); // Cookie expires in 1 day
-        window.location.href = "/"; // Navigate to home page using window.location
+        Cookie.set("authToken", response.data.token, { expires: 1 });
+        window.location.href = "/";
       } else {
         setError("Email or password is incorrect");
       }
@@ -72,7 +68,6 @@ export default function Login() {
             />
           </div>
 
-          {/* Role Selection */}
           <div className="mb-6">
             <label className="block text-sm font-medium text-gray-700" htmlFor="role">
               Role
@@ -99,10 +94,7 @@ export default function Login() {
         <div className="mt-4 text-center">
           <p className="text-sm text-gray-600">
             Don't have an account?{" "}
-            <a
-              href="/register" // Navigate to register page directly with a link
-              className="text-blue-500 hover:underline"
-            >
+            <a href="/register" className="text-blue-500 hover:underline">
               Register here
             </a>
           </p>

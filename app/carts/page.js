@@ -1,28 +1,26 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { getCart, deleteCart, updateCart, createTransaction, getPaymentMethod } from "../utils/api"; // Ensure correct path
-import toast, { Toaster } from "react-hot-toast"; // Import react-hot-toast
-import Link from "next/link"; // Import Link for navigation
-import CartItem from "../components/cartitem/page"; // Import CartItem component
-import PaymentMethodSelector from "../components/paymentmethod/page"; // Import PaymentMethodSelector
-import TotalPrice from "../components/totalprice/page"; // Import TotalPrice
-import CheckoutButton from "../components/checkoutbutton/page"; // Import CheckoutButton
-import { useRouter } from "next/navigation"; // Import useRouter from Next.js
+import { getCart, deleteCart, updateCart, createTransaction, getPaymentMethod } from "../utils/api";
+import toast, { Toaster } from "react-hot-toast";
+import Link from "next/link";
+import CartItem from "../components/cartitem/page";
+import PaymentMethodSelector from "../components/paymentmethod/page";
+import TotalPrice from "../components/totalprice/page";
+import CheckoutButton from "../components/checkoutbutton/page";
+import { useRouter } from "next/navigation";
 
 const Cart = () => {
-  const [cartItems, setCartItems] = useState([]); // State to hold cart items
-  const [loading, setLoading] = useState(true); // State for loading
-  const [error, setError] = useState(null); // State for error handling
-  const [paymentMethods, setPaymentMethods] = useState([]); // State to hold available payment methods
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(""); // State for selected payment method
-  const router = useRouter(); // Initialize the useRouter hook
+  const [cartItems, setCartItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [paymentMethods, setPaymentMethods] = useState([]);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
+  const router = useRouter();
 
-  // Calculate the total price of all items in the cart
   const calculateTotal = () => {
     return cartItems.reduce((total, item) => total + item.activity.price_discount * item.quantity, 0);
   };
 
-  // Remove item from the cart
   const removeItem = async (id) => {
     try {
       const response = await deleteCart(id);
@@ -37,7 +35,6 @@ const Cart = () => {
     }
   };
 
-  // Update item quantity in the cart
   const updateQuantity = async (id, newQuantity) => {
     try {
       const response = await updateCart(id, newQuantity);
@@ -52,7 +49,6 @@ const Cart = () => {
     }
   };
 
-  // Handle checkout process
   const handleCheckout = async () => {
     if (!selectedPaymentMethod) {
       toast.error("Please select a payment method.");
@@ -60,15 +56,13 @@ const Cart = () => {
     }
 
     try {
-      // Extract cartIds from the cartItems array
       const cartIds = cartItems.map((item) => item.id);
       console.log("Selected cart IDs: ", cartIds);
 
-      // Create transaction with selected cart items and payment method
       const response = await createTransaction(cartIds, selectedPaymentMethod);
       if (response.status === "OK") {
         toast.success("Transaction created successfully!");
-        router.push("/my-transaction"); // Redirect to transaction page
+        router.push("/my-transaction");
       } else {
         toast.error("Failed to create transaction.");
       }
@@ -77,7 +71,6 @@ const Cart = () => {
     }
   };
 
-  // Fetch cart data and payment methods on component mount
   useEffect(() => {
     const fetchCart = async () => {
       try {
@@ -103,9 +96,8 @@ const Cart = () => {
 
     fetchCart();
     fetchPaymentMethods();
-  }, []); // Run on mount
+  }, []);
 
-  // Handle change of selected payment method
   const handlePaymentMethodChange = (event) => {
     setSelectedPaymentMethod(event.target.value);
   };
@@ -121,7 +113,6 @@ const Cart = () => {
             </Link>
           </div>
 
-          {/* Display loading, error, or cart items */}
           {loading ? (
             <p className="text-xl">Loading...</p>
           ) : error ? (
@@ -138,21 +129,22 @@ const Cart = () => {
 
               <TotalPrice total={calculateTotal()} />
 
-              {/* Payment method selector */}
-              <PaymentMethodSelector
-                paymentMethods={paymentMethods}
-                selectedPaymentMethod={selectedPaymentMethod}
-                onPaymentMethodChange={handlePaymentMethodChange}
-              />
+              <div className="mt-4">
+                <PaymentMethodSelector
+                  paymentMethods={paymentMethods}
+                  selectedPaymentMethod={selectedPaymentMethod}
+                  onPaymentMethodChange={handlePaymentMethodChange}
+                />
+              </div>
 
-              {/* Checkout button */}
-              <CheckoutButton handleCheckout={handleCheckout} selectedPaymentMethod={selectedPaymentMethod} />
+              <div className="mt-6">
+                <CheckoutButton handleCheckout={handleCheckout} selectedPaymentMethod={selectedPaymentMethod} />
+              </div>
             </div>
           )}
         </div>
       </div>
 
-      {/* Toast notifications */}
       <Toaster position="top-right" />
     </div>
   );

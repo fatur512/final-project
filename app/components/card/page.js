@@ -40,14 +40,11 @@ export default function Example({ setBadgeCount }) {
     console.log(`Adding to cart: ${item.title}`);
 
     try {
-      // Call postCart with the item.id
       await postCart(item.id);
 
-      // If the request is successful, increase the badge count by 1
       setBadgeCount((prevCount) => prevCount + 1);
       console.log("Item successfully added to cart");
     } catch (error) {
-      // Handle any errors that occur during the postCart request
       console.log("Failed to add item to cart:", error);
     }
   };
@@ -61,8 +58,8 @@ export default function Example({ setBadgeCount }) {
           {activities.map((item) => (
             <div key={item.id} className="relative group">
               <img
-                alt={item.imageUrls.length > 0 ? item.imageUrls[0] : "Default Image"} // Fallback alt text
-                src={item.imageUrls.length > 0 && item.imageUrls != "" ? item.imageUrls[0] : "/img/paris.jpg"} // Default image if array is empty
+                alt={item.imageUrls.length > 0 ? item.imageUrls[0] : "Default Image"}
+                src={item.imageUrls.length > 0 && item.imageUrls != "" ? item.imageUrls[0] : "/img/paris.jpg"}
                 className="object-cover w-full bg-gray-200 rounded-md aspect-square group-hover:opacity-75 lg:aspect-auto lg:h-80"
               />
               <div className="flex justify-between mt-4">
@@ -83,8 +80,8 @@ export default function Example({ setBadgeCount }) {
                   </p>
                   <div className="flex items-center mt-2">
                     <button
-                      onClick={(e) => handleAddToCart(item, e)} // Pass event to handler to stop propagation
-                      className="relative z-10 text-blue-500 transition-colors duration-200 hover:text-blue-700" // Ensure button is clickable
+                      onClick={(e) => handleAddToCart(item, e)}
+                      className="relative z-10 text-blue-500 transition-colors duration-200 hover:text-blue-700"
                     >
                       <ShoppingCartIcon className="w-5 h-5" />
                     </button>
